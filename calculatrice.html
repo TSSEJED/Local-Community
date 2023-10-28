@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Local Community Forum</title>
+
+    <!-- Add the site icon (favicon) -->
+    <link rel="icon" href="lettre-t.png" type="image/png">
+    <style>
+        /* Add some basic styling to make the login page more attractive */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            overflow: hidden; /* Hide the content initially */
+        }
+        #page-content {
+            animation: slide-in 1s ease forwards; /* Apply the sliding animation */
+        }
+
+        @keyframes slide-in {
+            from {
+                transform: translateY(100%); /* Start off the screen */
+            }
+            to {
+                transform: translateY(0); /* Slide in to the normal position */
+            }
+        }
+
+        #logo img {
+            width: 200px; /* Adjust the width to make the logo bigger */
+        }
+
+        .additional-text {
+            animation: slide-in-text 2s ease forwards; /* Apply the sliding animation to additional-text */
+        }
+
+        @keyframes slide-in-text {
+            from {
+                opacity: 0; /* Initially invisible */
+                transform: translateY(100px); /* Start below the screen */
+            }
+            to {
+                opacity: 1; /* Fade in */
+                transform: translateY(0); /* Slide in to the normal position */
+            }
+        }
+
+        /* Style for user posts */
+        .user-post {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="page-content">
+        <div id="logo">
+            <img src="Capture écran 2023-10-13 130130.ico" alt="Site Logo">
+            <h1>TSSEJED</h1>
+        </div
+
+        <!-- Login form with sliding animation -->
+        <div id="login-form" class="additional-text">
+            <p>Login:</p>
+            <input type="text" id="username" placeholder="Username">
+            <p>Password:</p>
+            <input type="password" id="password" placeholder="Password">
+            <button id="login-button">Login</button>
+
+            <div class="additional-text" id="additionalText" style="display: none;">
+                📢 Hey you! Here's some information for you:
+
+                🌟 First, did you know that you're awesome? 🤩
+
+                🌐 Your journey is unique, so embrace it! 🗺️
+
+                📚 Keep learning, keep growing! 🧠🌱
+
+                💪 You've got the power to achieve your goals! 💼🚀
+
+                🌞 Stay positive and let your light shine! ☀️😄
+
+                🤝 Connect with others and create amazing experiences! 🤗🌍
+
+                Remember, the world is full of possibilities! 🌠 Keep being amazing! 💫🌟
+            </div>
+        </div>
+
+        <!-- Forum (visible after login) -->
+        <div id="forum" style="display: none;">
+            <input type="text" id="post" placeholder="Share something with your community">
+            <button onclick="postMessage()">Post</button>
+            <div id="posts">
+                <!-- Posts will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulated user authentication
+        const users = [
+            { username: "user1", password: "password1" },
+            { username: "user2", password: "password2" }
+        ];
+
+        let currentUser = null;
+
+        function login() {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                // Successful login
+                currentUser = user;
+                usernameInput.value = '';
+                passwordInput.value = '';
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('forum').style.display = 'block';
+                document.getElementById('additionalText').style.display = 'block'; // Show the additional text
+                displayPosts();
+            } else {
+                alert("Invalid username or password");
+            }
+        }
+
+        // Simulated database for posts
+        const posts = [];
+
+        function postMessage() {
+            // Only allow posting if the user is logged in
+            if (!currentUser) {
+                alert("Please log in first");
+                return;
+            }
+
+            const postInput = document.getElementById('post');
+            const message = postInput.value;
+            if (message) {
+                posts.push({ username: currentUser.username, message });
+                postInput.value = '';
+                displayPosts();
+            }
+        }
+
+        function deletePost(index) {
+            if (currentUser && index >= 0 && index < posts.length && posts[index].username === currentUser.username) {
+                posts.splice(index, 1); // Remove the post from the array
+                displayPosts();
+            }
+        }
+
+        function displayPosts() {
+            const postsDiv = document.getElementById('posts');
+            postsDiv.innerHTML = ''; // Clear the existing posts
+
+            posts.forEach((post, index) => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('user-post'); // Add a class for styling
+                postElement.innerHTML = `
+                    <p>${post.username} says: ${post.message}</p>
+                    <button onclick="deletePost(${index})">Delete</button>
+                `;
+                postsDiv.appendChild(postElement);
+            });
+        }
+
+        // Add an event listener to the login button
+        const loginButton = document.getElementById('login-button');
+        loginButton.addEventListener('click', login);
+    </script>
+</body>
+</html>
